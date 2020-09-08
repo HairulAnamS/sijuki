@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "529273624477",
+    "firebase_url": "https://sijuki-22c4c.firebaseio.com",
+    "project_id": "sijuki-22c4c",
+    "storage_bucket": "sijuki-22c4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529273624477:android:62b9b0b6a277a3a274c174",
+        "android_client_info": {
+          "package_name": "com.example.sijuki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529273624477-38m7obqdd7fmfrns65t2gmh9hhm0j2kf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFUikjR6aE7b4QNkOmr-FeFqQ4b_ip-PM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529273624477-38m7obqdd7fmfrns65t2gmh9hhm0j2kf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
