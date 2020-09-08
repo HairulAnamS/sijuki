@@ -79,8 +79,6 @@ class _ProfilPageState extends State<ProfilPage> {
                     radius: 50,
                     backgroundColor: Colors.redAccent,
                     backgroundImage: AssetImage("img/heru_logo.jpg"),
-                    // NetworkImage(
-                    //     'https://www.woolha.com/media/2020/03/eevee.png'),
                   ),
                   SizedBox(
                     height: 10,
