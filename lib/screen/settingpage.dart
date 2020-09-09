@@ -30,15 +30,16 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     ModeBloc blocMode = BlocProvider.of<ModeBloc>(context);
-          
-    
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<ModeBloc, int>(
         builder: (context, idXMode) => Scaffold(
+          backgroundColor: (idXMode == 1) ? Colors.black : Colors.white,
           appBar: AppBar(
             backgroundColor: (idXMode == 1) ? Colors.black : Colors.white,
-            
+            shadowColor: (idXMode == 1) ? Colors.white : Colors.black,
+
             // leading: IconButton(
             //   icon: Icon(
             //     Icons.arrow_back_ios,
@@ -46,7 +47,7 @@ class _SettingPageState extends State<SettingPage> {
             //   ),
             //   onPressed: () {
             //     print('Pop ke Profil');
-                
+
             //     // Navigator.of(context).push(
             //     //   MaterialPageRoute(builder: (context) => MainPage(userLogin: user,)),
             //     // );
@@ -60,42 +61,59 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                ListTileSwitch(
-                    leading: Icon(Icons.brightness_2),
-                    value: (idXMode == 1) ? true : false,
-                    onChanged: (value) {
-                      if (!value)
-                        blocMode.add(ModeEvent.to_light);
-                      else
-                        blocMode.add(ModeEvent.to_dark);
-
-                      //print('mode dart: $idXMode');
-                      // print(value);
-                      
-                      // setState(() {
-                      //   _value = value;
-                      // });
+            child: Container(
+              color: (idXMode == 1) ? Colors.black : Colors.white,
+              child: Column(
+                children: [
+                  ListTileSwitch(
+                      leading: Icon(
+                        Icons.brightness_2,
+                        color:
+                            (idXMode == 1) ? Colors.red[700] : Colors.grey[700],
+                      ),
+                      value: (idXMode == 1) ? true : false,
+                      onChanged: (value) {
+                        if (!value)
+                          blocMode.add(ModeEvent.to_light);
+                        else
+                          blocMode.add(ModeEvent.to_dark);
+                      },
+                      title: Text(
+                        'Mode Gelap',
+                        style: TextStyle(
+                          color: (idXMode == 1)
+                              ? Colors.red[700]
+                              : Colors.grey[700],
+                        ),
+                      )),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color:
+                          (idXMode == 1) ? Colors.red[700] : Colors.grey[700],
+                    ),
+                    title: Text(
+                      'Log Out',
+                      style: TextStyle(
+                        color:
+                            (idXMode == 1) ? Colors.red[700] : Colors.grey[700],
+                      ),
+                    ),
+                    subtitle: Text('Keluar dari aplikasi'),
+                    onTap: () {
+                      Alertku.alertLogout(context);
                     },
-                    title: Text('Mode Gelap')),
-                Container(
-                  height: 1,
-                  color: Colors.grey[300],
-                ),
-                ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('Log Out'),
-                  subtitle: Text('Keluar dari aplikasi'),
-                  onTap: () {
-                    Alertku.alertLogout(context);
-                  },
-                ),
-                Container(
-                  height: 1,
-                  color: Colors.grey[300],
-                ),
-              ],
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

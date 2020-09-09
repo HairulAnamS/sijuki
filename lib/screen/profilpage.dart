@@ -7,6 +7,7 @@ import 'package:sijuki/screen/tabPosting.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sijuki/model/posting.dart';
+import 'profileditpage.dart';
 
 class ProfilPage extends StatefulWidget {
   final User userLogin;
@@ -127,8 +128,14 @@ class _ProfilPageState extends State<ProfilPage> {
         Container(
           height: 30,
           color: Colors.grey[200],
-          child: FlatButton.icon(
-              onPressed: () {},
+          child: RaisedButton.icon(
+              onPressed: () {
+                Navigator.of(context).push(
+                  new MaterialPageRoute(
+                      builder: (context) =>
+                          new ProfilEditPage(userLogin: user)),
+                );
+              },
               icon: Icon(Icons.edit),
               label: Text('Edit Profil')),
         ),
@@ -224,7 +231,8 @@ class _ProfilPageState extends State<ProfilPage> {
                               Image(
                                 height: 200,
                                 width: double.infinity,
-                                image: NetworkImage(postingans.data["urlGambar"]),
+                                image:
+                                    NetworkImage(postingans.data["urlGambar"]),
                                 fit: BoxFit.contain,
                               ),
                               Padding(
