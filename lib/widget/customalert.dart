@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sijuki/auth_services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sijuki/bloc/tab_bloc.dart';
 
 class Alertku extends AlertDialog {
   static Future<void> showAlertCustom(BuildContext context, String aMessage) {
@@ -32,6 +34,8 @@ class Alertku extends AlertDialog {
   }
 
   static Future<void> alertLogout(BuildContext context) {
+    TabBloc blocTab = BlocProvider.of<TabBloc>(context);
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -44,6 +48,7 @@ class Alertku extends AlertDialog {
               child: Text('Ya'),
               color: Colors.blueAccent,
               onPressed: () {
+                blocTab.add(TabEvent.to_home);
                 Navigator.of(context).pop();
                 AuthServices.signOut();
               },

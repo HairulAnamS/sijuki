@@ -6,15 +6,32 @@ class User {
   String username;
   String email;
   String password;
+  String nohp;
+  String pekerjaan;
+  String alamat;
+  DateTime tglCreate;
 
-  User({this.iduser, this.username, this.email, this.password});
+  User(
+      {this.iduser,
+      this.username,
+      this.email,
+      this.password,
+      this.nohp,
+      this.pekerjaan,
+      this.alamat,
+      this.tglCreate});
 
   factory User.fromJson(Map<String, dynamic> map) {
     return User(
         iduser: map["iduser"],
         username: map["username"],
         email: map["email"],
-        password: map["password"]);
+        password: map["password"],
+        nohp: map["nohp"],
+        pekerjaan: map["pekerjaan"],
+        alamat: map["alamat"],
+        tglCreate: DateTime.fromMillisecondsSinceEpoch(
+            map["tglCreate"].millisecondsSinceEpoch));
   }
 
   Map<String, dynamic> toJson() {
@@ -22,7 +39,11 @@ class User {
       "iduser": iduser,
       "username": username,
       "email": email,
-      "password": password
+      "password": password,
+      "nohp": nohp,
+      "pekerjaan": pekerjaan,
+      "alamat": alamat,
+      "tglCreate": tglCreate
     };
   }
 
@@ -52,7 +73,11 @@ class UserDB {
       'iduser': user.iduser,
       'username': user.username,
       'email': user.email,
-      'password': user.password
+      'password': user.password,
+      'nohp': user.nohp,
+      'pekerjaan': user.pekerjaan,
+      'alamat': user.alamat,
+      'tglCreate': user.tglCreate
     });
   }
 

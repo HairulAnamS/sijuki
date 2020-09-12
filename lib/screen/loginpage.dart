@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       if (_checkValidate()) {
         //Dialogs.showLoadingDialog(context, _keyLoader); //invoking login
-        
+
         // setState(() {
         //   _isLogin = true;
         // });
@@ -128,9 +128,14 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.25,
+                  padding: EdgeInsets.all(23),
                   decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(20)),
+                  child: Image(
+                    image: AssetImage("img/sijuki putih.png"),
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 ListView(
                   children: [
@@ -181,13 +186,15 @@ class _LoginPageState extends State<LoginPage> {
                                     icon: Icon(Icons.vpn_key),
                                     suffixIcon: GestureDetector(
                                         onTap: () {
-                                          bloc.add((currentIsShowPassword == true)
-                                              ? VisibilityEvent.to_hide
-                                              : VisibilityEvent.to_show);
+                                          bloc.add(
+                                              (currentIsShowPassword == true)
+                                                  ? VisibilityEvent.to_hide
+                                                  : VisibilityEvent.to_show);
                                         },
-                                        child: Icon((currentIsShowPassword == true)
-                                            ? Icons.visibility
-                                            : Icons.visibility_off)),
+                                        child: Icon(
+                                            (currentIsShowPassword == true)
+                                                ? Icons.visibility
+                                                : Icons.visibility_off)),
                                     hintText: "Password",
                                     labelText: "Password",
                                     errorText: (_validatePassword)
@@ -205,11 +212,11 @@ class _LoginPageState extends State<LoginPage> {
                                     child: RaisedButton(
                                       onPressed: () async {
                                         print('Go to page Main');
-                                        
+
                                         //setState(() {
-                                          //_isLogin = true;
-                                          _handleSubmit(context, blocLoading);
-                                          //_isLogin = false;
+                                        //_isLogin = true;
+                                        _handleSubmit(context, blocLoading);
+                                        //_isLogin = false;
                                         //});
                                         // blocLoading.add(LoadingEvent.to_hide);
                                         // ColorLoader();

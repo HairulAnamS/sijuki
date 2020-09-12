@@ -22,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController controlPassword = TextEditingController();
   TextEditingController controlPasswordConfirm = TextEditingController();
   TextEditingController controlUsername = TextEditingController();
+  TextEditingController controlNohp = TextEditingController();
   // FocusNode _focus = new FocusNode();
 
   // bool _isRegister = false;
@@ -31,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _validateEmail = true;
   bool _validatePassword = true;
   bool _validatePasswordConfirm = true;
+  bool _validateNohp = true;
   String _message = "";
   FirebaseUser userSignup;
 
@@ -55,6 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _validatePassword = true;
     _validatePasswordConfirm = true;
     _validateUsername = true;
+    _validateNohp = true;
     _result = true;
 
     setState(() {
@@ -74,6 +77,14 @@ class _RegisterPageState extends State<RegisterPage> {
         _validateUsername = false;
         _result = false;
       }
+      if(controlNohp.text.trim() == ""){
+        _validateNohp = false;
+        _result = false;
+      }
+      if(controlPassword.text.trim() != controlPasswordConfirm.text.trim()){
+        _result = false;
+        _message = "Password Confirm tidak cocok";
+      }
       print('iduser check: $fiduser');
     });
     return _result;
@@ -84,6 +95,10 @@ class _RegisterPageState extends State<RegisterPage> {
     user.username = controlUsername.text;
     user.email = controlEmail.text;
     user.password = controlPassword.text;
+    user.nohp = controlNohp.text;
+    user.pekerjaan = "";
+    user.alamat = "";
+    user.tglCreate = DateTime.now();
   }
 
   Future<void> _registerUser(BuildContext context, LoadingBloc bloc) async {
@@ -102,6 +117,9 @@ class _RegisterPageState extends State<RegisterPage> {
           print(_message);
           Alertku.showAlertCustom(context, _message);
         }
+      }else{
+        print(_message);
+        Alertku.showAlertCustom(context, _message);
       }
     } catch (e) {
       print(e);
@@ -124,9 +142,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.25,
+                  padding: EdgeInsets.all(23),
                   decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(20)),
+                  child: Image(
+                    image: AssetImage("img/sijuki putih.png"),
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 Positioned(
                   bottom: 0,
@@ -171,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 controller: controlUsername,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
-                                    icon: Icon(Icons.people_outline),
+                                    icon: Icon(Icons.person),
                                     hintText: "Username",
                                     labelText: "Username",
                                     errorText: (_validateUsername)
@@ -192,6 +215,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                     errorText: (_validateEmail)
                                         ? null
                                         : 'Email harus diisi'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                              child: TextField(
+                                onChanged: (value) {},
+                                controller: controlNohp,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    icon: Icon(Icons.phone),
+                                    hintText: "No HP",
+                                    labelText: "No HP",
+                                    errorText: (_validateNohp)
+                                        ? null
+                                        : 'No HP harus diisi'),
                               ),
                             ),
                             Padding(

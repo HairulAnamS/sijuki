@@ -29,6 +29,7 @@ class _MainPageState extends State<MainPage> {
   User user = new User();
   UserDB userDB = new UserDB();
   var _user;
+  // bool isLoginOrRegister = true;
 
   // final List<Widget> _children = [
   //   HomePage(userLogin: null),
@@ -43,7 +44,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
     // user = new User();
     // userDB = new UserDB();
-
+    // isLoginOrRegister = true;
     _getUser();
     //print('test: ' + _user['username']);
 
@@ -150,6 +151,7 @@ class _MainPageState extends State<MainPage> {
                           color: (idxTab == tabHome) ? Colors.red : Colors.grey,
                         ),
                         onPressed: () {
+                          // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_home);
                           if (user.iduser != null) {
                             print(user);
@@ -166,6 +168,7 @@ class _MainPageState extends State<MainPage> {
                               (idxTab == tabSerach) ? Colors.red : Colors.grey,
                         ),
                         onPressed: () {
+                          // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_search);
                           //_getUser();
                           print('test: ' + _user.toString());
@@ -188,6 +191,7 @@ class _MainPageState extends State<MainPage> {
                               (idxTab == tabNotif) ? Colors.red : Colors.grey,
                         ),
                         onPressed: () {
+                          // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_notif);
                         }),
                     IconButton(
@@ -199,6 +203,7 @@ class _MainPageState extends State<MainPage> {
                               (idxTab == tabProfil) ? Colors.red : Colors.grey,
                         ),
                         onPressed: () {
+                          // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_profil);
                         }),
                   ],

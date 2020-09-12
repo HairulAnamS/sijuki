@@ -17,6 +17,7 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
   TextEditingController controlUsername = TextEditingController();
   TextEditingController controlAlamat = TextEditingController();
   TextEditingController controlPekerjaan = TextEditingController();
+  TextEditingController controlNohp= TextEditingController();
 
   FocusNode myFocusNode = new FocusNode();
 
@@ -24,6 +25,7 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
   bool _validateUsername = true;
   bool _validateAlamat = true;
   bool _validatePekerjaan = true;
+  bool _validateNohp = true;
 
   User user = new User();
   UserDB userDB = new UserDB();
@@ -34,6 +36,9 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
     user = widget.userLogin;
 
     controlUsername.text = user.username;
+    controlNohp.text = user.nohp;
+    controlPekerjaan.text = user.pekerjaan;
+    controlAlamat.text = user.alamat;
   }
 
   @override
@@ -112,7 +117,7 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
                     child: TextField(
                       // focusNode: myFocusNode,
                       onChanged: (value) {},
-                      controller: controlPekerjaan,
+                      controller: controlNohp,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(

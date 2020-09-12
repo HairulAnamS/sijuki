@@ -6,6 +6,7 @@ import 'package:sijuki/bloc/mode_bloc.dart';
 import 'mainpage.dart';
 import 'package:sijuki/model/user.dart';
 
+
 class SettingPage extends StatefulWidget {
   final User userLogin;
   const SettingPage({
@@ -30,6 +31,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     ModeBloc blocMode = BlocProvider.of<ModeBloc>(context);
+    
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
