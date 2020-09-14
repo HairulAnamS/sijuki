@@ -60,11 +60,15 @@ class _HomePageState extends State<HomePage> {
                           leading: CircleAvatar(
                             radius: 20,
                             backgroundColor: Colors.redAccent,
-                            backgroundImage: AssetImage("img/heru_logo.jpg"),
+                            backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
+                                ? AssetImage("img/noprofile.png")
+                                : NetworkImage(user.urlPhoto),
                             // NetworkImage(
                             //     'https://www.woolha.com/media/2020/03/eevee.png'),
                           ),
-                          title: (user.username != null) ? Text(user.username): Text(''),
+                          title: (user.username != null)
+                              ? Text(user.username)
+                              : Text(''),
                           subtitle: Text(
                             postingans.data["tglPosting"],
                             style: TextStyle(fontSize: 12),

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sijuki/screen/profilTabpage.dart';
+// import 'package:sijuki/screen/profilTabpage.dart';
 import 'package:sijuki/screen/tabPosting.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -79,7 +79,9 @@ class _ProfilPageState extends State<ProfilPage> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.redAccent,
-                    backgroundImage: AssetImage("img/heru_logo.jpg"),
+                    backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
+                        ? AssetImage("img/noprofile.png")
+                        : NetworkImage(user.urlPhoto),
                   ),
                   SizedBox(
                     height: 10,
@@ -115,8 +117,8 @@ class _ProfilPageState extends State<ProfilPage> {
                       SizedBox(
                         width: 10,
                       ),
-                      (user.iduser != null)
-                          ? Text('Surabaya, Indonesia')
+                      (user.alamat != null || user.alamat != "")
+                          ? Text(user.alamat)
                           : Text('Indonesia')
                     ],
                   ),
@@ -214,8 +216,9 @@ class _ProfilPageState extends State<ProfilPage> {
                                 leading: CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.redAccent,
-                                  backgroundImage:
-                                      AssetImage("img/heru_logo.jpg"),
+                                  backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
+                                      ? AssetImage("img/noprofile.png")
+                                      : NetworkImage(user.urlPhoto),
                                   // NetworkImage(
                                   //     'https://www.woolha.com/media/2020/03/eevee.png'),
                                 ),

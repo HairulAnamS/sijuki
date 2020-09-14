@@ -154,7 +154,7 @@ class _MainPageState extends State<MainPage> {
                           // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_home);
                           if (user.iduser != null) {
-                            print(user);
+                            print(user.email);
                           } else {
                             print('durung');
                           }
@@ -171,8 +171,8 @@ class _MainPageState extends State<MainPage> {
                           // isLoginOrRegister = false;
                           blocTab.add(TabEvent.to_search);
                           //_getUser();
-                          print('test: ' + _user.toString());
-                          print(user.iduser.toString() + ' ' + user.username);
+                          print(user.email);
+                          // print(user.iduser.toString() + ' ' + user.username);
                           //print(widget.userLogin.email);
                           // user = userDB.selectByEmail(widget.userLogin.email);
                           // if (user.iduser != null) {

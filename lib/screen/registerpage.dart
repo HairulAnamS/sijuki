@@ -98,6 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
     user.nohp = controlNohp.text;
     user.pekerjaan = "";
     user.alamat = "";
+    user.urlPhoto = "";
     user.tglCreate = DateTime.now();
   }
 

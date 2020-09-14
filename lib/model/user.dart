@@ -9,6 +9,7 @@ class User {
   String nohp;
   String pekerjaan;
   String alamat;
+  String urlPhoto;
   DateTime tglCreate;
 
   User(
@@ -19,6 +20,7 @@ class User {
       this.nohp,
       this.pekerjaan,
       this.alamat,
+      this.urlPhoto,
       this.tglCreate});
 
   factory User.fromJson(Map<String, dynamic> map) {
@@ -30,6 +32,7 @@ class User {
         nohp: map["nohp"],
         pekerjaan: map["pekerjaan"],
         alamat: map["alamat"],
+        urlPhoto: map["urlPhoto"],
         tglCreate: DateTime.fromMillisecondsSinceEpoch(
             map["tglCreate"].millisecondsSinceEpoch));
   }
@@ -43,6 +46,7 @@ class User {
       "nohp": nohp,
       "pekerjaan": pekerjaan,
       "alamat": alamat,
+      "urlPhoto": urlPhoto,
       "tglCreate": tglCreate
     };
   }
@@ -77,8 +81,19 @@ class UserDB {
       'nohp': user.nohp,
       'pekerjaan': user.pekerjaan,
       'alamat': user.alamat,
+      'urlPhoto': user.urlPhoto,
       'tglCreate': user.tglCreate
     });
+  }
+
+  Future<void> update(User user) async {
+    await dataCollection.document(user.iduser.toString()).setData({
+      'username': user.username,
+      'nohp': user.nohp,
+      'pekerjaan': user.pekerjaan,
+      'alamat': user.alamat,
+      'urlPhoto': user.urlPhoto
+    }, merge: true);
   }
 
   selectByID(int id) {
