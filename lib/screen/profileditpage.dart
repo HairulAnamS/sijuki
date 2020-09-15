@@ -9,6 +9,7 @@ import 'package:sijuki/bloc/loading_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:sijuki/widget/colorloader.dart';
 import 'package:sijuki/widget/customalert.dart';
+import 'package:sijuki/screen/mainpage.dart';
 
 class ProfilEditPage extends StatefulWidget {
   final User userLogin;
@@ -58,8 +59,6 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
     if (user.urlPhoto != "") _urlImage = user.urlPhoto;
 
     // _getUser();
-
-    
   }
 
   // void _getUser() {
@@ -158,7 +157,7 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
                 color: Colors.red[700],
               ),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, user);
               }),
           title: Text(
             'Edit Profil',
@@ -312,7 +311,12 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
                       child: RaisedButton.icon(
                           onPressed: () {
                             _updateUser(context, blocLoading);
-                            Navigator.of(context).pop();
+                            // Navigator.of(context).push(
+                            //   new MaterialPageRoute(
+                            //       builder: (context) =>
+                            //           new MainPage(userLogin: user)),
+                            // );
+                            Navigator.pop(context, user);
                           },
                           color: Colors.red[700],
                           icon: Icon(

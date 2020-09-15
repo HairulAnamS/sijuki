@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sijuki/model/user.dart';
 
 class Posting {
   int idposting;
@@ -75,6 +76,37 @@ class PostingDB {
         .getDocuments();
     return _myData.documents;
   }
+
+  // getData2() async {
+  //   QuerySnapshot _myData = await dataCollection
+  //       .orderBy('tglCreate', descending: true)
+  //       .getDocuments();
+  //   return _myData.documents;
+  // }
+
+  // getDataTest() async {
+  //   var _user;
+  //   UserDB userDB = new UserDB();
+  //   // User user = new User();
+  //   List<User> userList = [];
+
+  //   QuerySnapshot docs = await dataCollection
+  //       .orderBy('tglCreate', descending: true)
+  //       .getDocuments();
+
+  //   if (docs.documents.isNotEmpty) {
+  //     for (int i = 0; i < docs.documents.length; i++) {
+  //       await userDB
+  //           .selectByID(docs.documents[i].data["iduser"])
+  //           .then((QuerySnapshot docsUser) {
+  //         _user = docsUser.documents[i].data;
+  //         userList.add(User.fromJson(_user));
+  //       });
+  //     }
+  //   }
+
+  //   return userList;
+  // }
 
   Future<void> getDataPribadi(int iduser) async {
     QuerySnapshot _myData = await dataCollection

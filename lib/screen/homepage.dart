@@ -16,39 +16,54 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Future _dataPosting;
-  User user = new User();
+  User userPosting = new User();
   UserDB userDB = new UserDB();
   Posting posting = new Posting();
   PostingDB postingDB = new PostingDB();
 
-  var _user;
+  var _userPosting;
+  List<User> userList = [];
 
   @override
   void initState() {
     super.initState();
     _dataPosting = postingDB.getData();
-    // _dataPosting = postingDB.getData();
   }
 
-  void _getUser(int iduser) {
-    userDB.selectByID(iduser).then((QuerySnapshot docs) {
+  Future<void> _getUser(int iduser) async {
+    await userDB.selectByID(iduser).then((QuerySnapshot docs) {
       if (docs.documents.isNotEmpty) {
-        _user = docs.documents[0].data;
-        user = User.fromJson(_user);
+        _userPosting = docs.documents[0].data;
+        userList.clear();
+        userList.add(User.fromJson(_userPosting));
+        userPosting = User.fromJson(_userPosting);
       }
     });
   }
 
+  // Future<void> _getDataPosting() async{
+  //   _dataPosting = await postingDB.getData2().then((QuerySnapshot docs) {
+  //     if (docs.documents.isNotEmpty) {
+  //       for (int i = 0; i < docs.documents.length; i++){
+  //         _getUser(docs.documents[i].data["iduser"]);
+  //         // _user = docs.documents[i].data;
+  //         // userList.add(User.fromJson(_user));
+  //       }
+  //     }
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: postingDB.getData(),
+        future: _dataPosting,
         builder: (_, dataPosting) {
           if (dataPosting.hasData) {
             return ListView.builder(
                 itemCount: dataPosting.data.length,
                 itemBuilder: (_, index) {
                   final postingans = dataPosting.data[index];
+                  // userList = postingDB.getDataTest();
                   _getUser(dataPosting.data[index].data["iduser"]);
                   return Container(
                     //height: 300,
@@ -60,15 +75,20 @@ class _HomePageState extends State<HomePage> {
                           leading: CircleAvatar(
                             radius: 20,
                             backgroundColor: Colors.redAccent,
-                            backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
+                            backgroundImage: (userPosting.urlPhoto == "" ||
+                                    userPosting.urlPhoto == null)
                                 ? AssetImage("img/noprofile.png")
-                                : NetworkImage(user.urlPhoto),
+                                : NetworkImage(userPosting.urlPhoto),
+                            // backgroundImage: (userList[index].urlPhoto == "" || userList[index].urlPhoto == null)
+                            //     ? AssetImage("img/noprofile.png")
+                            //     : NetworkImage(userList[index].urlPhoto),
                             // NetworkImage(
                             //     'https://www.woolha.com/media/2020/03/eevee.png'),
                           ),
-                          title: (user.username != null)
-                              ? Text(user.username)
+                          title: (userPosting.username != null)
+                              ? Text(userPosting.username)
                               : Text(''),
+                          // title: Text(postingans.data["iduser"].toString()),
                           subtitle: Text(
                             postingans.data["tglPosting"],
                             style: TextStyle(fontSize: 12),
@@ -79,12 +99,16 @@ class _HomePageState extends State<HomePage> {
                             child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(postingans.data["content"]))),
-                        Image(
-                          height: 200,
-                          width: double.infinity,
-                          image: NetworkImage(postingans.data["urlGambar"]),
-                          fit: BoxFit.fitHeight,
-                        ),
+                        (postingans.data["urlGambar"] == "" ||
+                                postingans.data["urlGambar"] == null)
+                            ? Container()
+                            : Image(
+                                height: 200,
+                                width: double.infinity,
+                                image:
+                                    NetworkImage(postingans.data["urlGambar"]),
+                                fit: BoxFit.fitHeight,
+                              ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Container(

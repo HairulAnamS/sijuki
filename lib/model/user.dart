@@ -100,6 +100,10 @@ class UserDB {
     return dataCollection.where('iduser', isEqualTo: id).getDocuments();
   }
 
+  selectByIDNew(int id)  {
+    return dataCollection.where('iduser', isEqualTo: id).getDocuments();
+  }
+
   selectByEmail(String email) {
     return dataCollection.where('email', isEqualTo: email).getDocuments();
     // await dataCollection

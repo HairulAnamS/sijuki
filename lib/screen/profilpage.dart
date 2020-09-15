@@ -1,11 +1,10 @@
 // import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:sijuki/screen/profilTabpage.dart';
-import 'package:sijuki/screen/tabPosting.dart';
+// import 'package:sijuki/screen/tabPosting.dart';
 import 'package:sijuki/model/user.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sijuki/model/posting.dart';
 import 'profileditpage.dart';
 
@@ -21,23 +20,23 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
-  final List<Widget> _children = [
-    TabPosting(
-      userLogin: null,
-      colorku: Colors.blueAccent,
-    ),
-    TabPosting(userLogin: null, colorku: Colors.redAccent),
-    // HomePage(colorku: Colors.greenAccent),
-    // ProfilPage(userLogin: null)
-  ];
+  // final List<Widget> _children = [
+  //   TabPosting(
+  //     userLogin: null,
+  //     colorku: Colors.blueAccent,
+  //   ),
+  //   TabPosting(userLogin: null, colorku: Colors.redAccent),
+  //   // HomePage(colorku: Colors.greenAccent),
+  //   // ProfilPage(userLogin: null)
+  // ];
 
-  final List<String> _str = [
-    'aku suka kamu, tapi boong, iyyak..',
-    'aku kamu dia bapakmu adikmu ibumu dan juga keluargamu',
-    'Jika sebuah penampung hanya memiliki satu turunan tingkat atas, Anda dapat menentukan properti penyelarasan untuk anak tersebut dan memberikan nilai yang tersedia. itu akan mengisi semua ruang di wadah.'
-  ];
+  // final List<String> _str = [
+  //   'aku suka kamu, tapi boong, iyyak..',
+  //   'aku kamu dia bapakmu adikmu ibumu dan juga keluargamu',
+  //   'Jika sebuah penampung hanya memiliki satu turunan tingkat atas, Anda dapat menentukan properti penyelarasan untuk anak tersebut dan memberikan nilai yang tersedia. itu akan mengisi semua ruang di wadah.'
+  // ];
 
-  int _idx = 0;
+  int _idxTab = 0;
   User user = new User();
   UserDB userDB = new UserDB();
   Posting posting = new Posting();
@@ -60,6 +59,20 @@ class _ProfilPageState extends State<ProfilPage> {
   //   });
   // }
 
+  void _goEditProfile(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilEditPage(userLogin: user),
+        ));
+
+    if (result != null) {
+      setState(() {
+        user = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -79,9 +92,10 @@ class _ProfilPageState extends State<ProfilPage> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.redAccent,
-                    backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
-                        ? AssetImage("img/noprofile.png")
-                        : NetworkImage(user.urlPhoto),
+                    backgroundImage:
+                        (user.urlPhoto == "" || user.urlPhoto == null)
+                            ? AssetImage("img/noprofile.png")
+                            : NetworkImage(user.urlPhoto),
                   ),
                   SizedBox(
                     height: 10,
@@ -132,11 +146,17 @@ class _ProfilPageState extends State<ProfilPage> {
           color: Colors.grey[200],
           child: RaisedButton.icon(
               onPressed: () {
-                Navigator.of(context).push(
-                  new MaterialPageRoute(
-                      builder: (context) =>
-                          new ProfilEditPage(userLogin: user)),
-                );
+                _goEditProfile(context);
+                // final result = await Navigator.push(
+                //   context,
+                //   new MaterialPageRoute(
+                //       builder: (context) =>
+                //           new ProfilEditPage(userLogin: user)),
+                // );
+
+                // setState(() {
+                //   String aser = result;
+                // });
               },
               icon: Icon(Icons.edit),
               label: Text('Edit Profil')),
@@ -159,16 +179,18 @@ class _ProfilPageState extends State<ProfilPage> {
                   GestureDetector(
                     child: Text('Postingan'),
                     onTap: () {
+                      // bloc.add(TabProfilEvent.to_post);
                       setState(() {
-                        _idx = 0;
+                        _idxTab = 0;
                       });
                     },
                   ),
                   GestureDetector(
                     child: Text('Komentar'),
                     onTap: () {
+                      // bloc.add(TabProfilEvent.to_comment);
                       setState(() {
-                        _idx = 1;
+                        _idxTab = 1;
                       });
                     },
                   ),
@@ -181,13 +203,13 @@ class _ProfilPageState extends State<ProfilPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    height: 5,
-                    color: Colors.blueAccent,
+                    height: 3,
+                    color: (_idxTab == 0) ? Colors.redAccent : Colors.grey[300],
                     width: MediaQuery.of(context).size.width * 0.5,
                   ),
                   Container(
-                    height: 5,
-                    color: Colors.redAccent,
+                    height: 3,
+                    color: (_idxTab == 1) ? Colors.redAccent : Colors.grey[300],
                     width: MediaQuery.of(context).size.width * 0.5,
                   )
                 ],
@@ -196,7 +218,9 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
         ),
         FutureBuilder(
-            future: postingDB.getDataPribadi(user.iduser),
+            future: (_idxTab == 0)
+                ? postingDB.getDataPribadi(user.iduser)
+                : postingDB.getDataPribadi(0),
             builder: (_, dataPosting) {
               if (dataPosting.hasData) {
                 return ListView.builder(
@@ -216,7 +240,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                 leading: CircleAvatar(
                                   radius: 20,
                                   backgroundColor: Colors.redAccent,
-                                  backgroundImage: (user.urlPhoto == "" || user.urlPhoto == null)
+                                  backgroundImage: (user.urlPhoto == "" ||
+                                          user.urlPhoto == null)
                                       ? AssetImage("img/noprofile.png")
                                       : NetworkImage(user.urlPhoto),
                                   // NetworkImage(
@@ -231,13 +256,16 @@ class _ProfilPageState extends State<ProfilPage> {
                               Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(postingans.data["content"])),
-                              Image(
-                                height: 200,
-                                width: double.infinity,
-                                image:
-                                    NetworkImage(postingans.data["urlGambar"]),
-                                fit: BoxFit.contain,
-                              ),
+                              (postingans.data["urlGambar"] == "" ||
+                                      postingans.data["urlGambar"] == null)
+                                  ? Container()
+                                  : Image(
+                                      height: 200,
+                                      width: double.infinity,
+                                      image: NetworkImage(
+                                          postingans.data["urlGambar"]),
+                                      fit: BoxFit.contain,
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(

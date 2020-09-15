@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart' as _path;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -37,14 +37,18 @@ class _AddPostingPageState extends State<AddPostingPage> {
   bool _validateContent = true;
   String _message = "";
 
+  User user = new User();
+  UserDB userDB = new UserDB();
+
   @override
   void initState() {
     super.initState();
+    user = widget.userLogin;
     posting = new Posting();
     postingDB = new PostingDB();
     getPostingID();
     print('idposting init: $fidposting');
-    print('iduser init: ' + widget.userLogin.username);
+    print('iduser init: ' + user.username);
   }
 
   void getPostingID() async {
@@ -170,11 +174,14 @@ class _AddPostingPageState extends State<AddPostingPage> {
                   CircleAvatar(
                     radius: 15,
                     backgroundColor: Colors.redAccent,
-                    backgroundImage: AssetImage("img/heru_logo.jpg"),
+                    backgroundImage:
+                        (user.urlPhoto == "" || user.urlPhoto == null)
+                            ? AssetImage("img/noprofile.png")
+                            : NetworkImage(user.urlPhoto),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Hairul Anam S'),
+                    child: Text(user.username)
                   ),
                   Spacer(),
                   IconButton(
