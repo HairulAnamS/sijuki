@@ -41,16 +41,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // Future<void> _getDataPosting() async{
-  //   _dataPosting = await postingDB.getData2().then((QuerySnapshot docs) {
-  //     if (docs.documents.isNotEmpty) {
-  //       for (int i = 0; i < docs.documents.length; i++){
-  //         _getUser(docs.documents[i].data["iduser"]);
-  //         // _user = docs.documents[i].data;
-  //         // userList.add(User.fromJson(_user));
-  //       }
-  //     }
-  //   });
+  // Future<void> _ambilData() async{
+  //   _dataPosting = postingDB.getData();
+  //   userPostingList = postingDB.getDataTestUser();
   // }
 
   @override
@@ -63,6 +56,7 @@ class _HomePageState extends State<HomePage> {
                 itemCount: dataPosting.data.length,
                 itemBuilder: (_, index) {
                   final postingans = dataPosting.data[index];
+                  // final userPos = postingDB.getDataTestUser();
                   // userList = postingDB.getDataTest();
                   _getUser(dataPosting.data[index].data["iduser"]);
                   return Container(
@@ -79,12 +73,15 @@ class _HomePageState extends State<HomePage> {
                                     userPosting.urlPhoto == null)
                                 ? AssetImage("img/noprofile.png")
                                 : NetworkImage(userPosting.urlPhoto),
-                            // backgroundImage: (userList[index].urlPhoto == "" || userList[index].urlPhoto == null)
+                            // backgroundImage: (userPostingList[index].urlPhoto == "" || userPostingList[index].urlPhoto == null)
                             //     ? AssetImage("img/noprofile.png")
-                            //     : NetworkImage(userList[index].urlPhoto),
+                            //     : NetworkImage(userPostingList[index].urlPhoto),
                             // NetworkImage(
                             //     'https://www.woolha.com/media/2020/03/eevee.png'),
                           ),
+                          // title: (userPostingList != null)
+                          //     ? Text(userPosting.username)
+                          //     : Text(''),
                           title: (userPosting.username != null)
                               ? Text(userPosting.username)
                               : Text(''),

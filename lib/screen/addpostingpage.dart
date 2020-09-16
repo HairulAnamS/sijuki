@@ -8,6 +8,8 @@ import 'package:date_format/date_format.dart';
 import 'package:sijuki/widget/customalert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sijuki/model/user.dart';
+import 'package:sijuki/bloc/tab_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddPostingPage extends StatefulWidget {
   final User userLogin;
@@ -140,6 +142,8 @@ class _AddPostingPageState extends State<AddPostingPage> {
 
   @override
   Widget build(BuildContext context) {
+    TabBloc blocTab = BlocProvider.of<TabBloc>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -153,7 +157,7 @@ class _AddPostingPageState extends State<AddPostingPage> {
             ),
             onPressed: () {
               // print('Pop ke Profil');
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           title: Text(
@@ -250,6 +254,7 @@ class _AddPostingPageState extends State<AddPostingPage> {
         floatingActionButton: FloatingActionButton(
           elevation: 5,
           onPressed: () {
+            blocTab.add(TabEvent.to_search);
             _insertPosting(context);
             Navigator.pop(context);
           },

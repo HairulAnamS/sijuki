@@ -100,8 +100,25 @@ class UserDB {
     return dataCollection.where('iduser', isEqualTo: id).getDocuments();
   }
 
-  selectByIDNew(int id)  {
-    return dataCollection.where('iduser', isEqualTo: id).getDocuments();
+  Future<User> selectByIDNew(int id) async {
+    QuerySnapshot docs =
+        await dataCollection.where('iduser', isEqualTo: id).getDocuments();
+
+    if (docs.documents.length > 0) {
+      user = User.fromJson(docs.documents[0].data);
+    }
+
+    return user;
+  }
+
+  User selectByIDNew2(int id)  {
+    dataCollection.where('iduser', isEqualTo: id).getDocuments().then((docs) {
+      if (docs.documents.length > 0) {
+        user = User.fromJson(docs.documents[0].data);
+      }
+    });
+
+    return user;
   }
 
   selectByEmail(String email) {

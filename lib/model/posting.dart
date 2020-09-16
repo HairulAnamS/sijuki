@@ -25,7 +25,8 @@ class Posting {
         content: map["content"],
         urlGambar: map["urlGambar"],
         tglPosting: map["tglPosting"],
-        tglCreate: map["tglCreate"]);
+        tglCreate: DateTime.fromMillisecondsSinceEpoch(
+            map["tglCreate"].millisecondsSinceEpoch));
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +76,84 @@ class PostingDB {
         .orderBy('tglCreate', descending: true)
         .getDocuments();
     return _myData.documents;
+  }
+
+  Future <List<Posting>> getDataBiasa() async{
+    List<Posting> postingList = [];
+    await dataCollection
+        .orderBy('tglCreate', descending: true)
+        .getDocuments()
+        .then((docs) {
+      if (docs.documents.length > 0) {
+        postingList.clear();
+        for (int i = 0; i < docs.documents.length; i++) {
+          postingList.add(Posting.fromJson(docs.documents[i].data));
+        }
+      }
+    });
+
+    return postingList;
+  }
+
+  Future <List<User>> getDataUserPosting() async{
+    List<User> userList = [];
+    UserDB userDB = new UserDB();
+    User user = new User();
+    // var user1;
+
+    await dataCollection
+        .orderBy('tglCreate', descending: true)
+        .getDocuments()
+        .then((docs) async {
+      if (docs.documents.length > 0) {
+        userList.clear();
+        for (int i = 0; i < docs.documents.length; i++) {
+          user = await userDB.selectByIDNew(docs.documents[i].data["iduser"]);
+          userList.add(user);
+        }
+      }
+    });
+
+    print("step 2");
+    //print(userList.toString());
+    return userList;
+  }
+
+  Future<List<int>> getDataTest() async {
+    List<int> idUserList = [];
+    QuerySnapshot _myData = await dataCollection
+        .orderBy('tglCreate', descending: true)
+        .getDocuments();
+
+    if (_myData.documents.length > 0) {
+      idUserList.clear();
+      for (int i = 0; i < _myData.documents.length; i++) {
+        idUserList.add(_myData.documents[i].data["iduser"]);
+      }
+    }
+    print("step 2");
+    print(idUserList.toString());
+    return idUserList;
+  }
+
+  Future<List<User>> getDataTestUser() async {
+    List<User> userList = [];
+    UserDB userDB = new UserDB();
+    User user = new User();
+    QuerySnapshot _myData = await dataCollection
+        .orderBy('tglCreate', descending: true)
+        .getDocuments();
+
+    if (_myData.documents.length > 0) {
+      userList.clear();
+      for (int i = 0; i < _myData.documents.length; i++) {
+        user = await userDB.selectByIDNew(_myData.documents[i].data["iduser"]);
+        userList.add(user);
+      }
+    }
+    print("step 2");
+    //print(userList.toString());
+    return userList;
   }
 
   // getData2() async {

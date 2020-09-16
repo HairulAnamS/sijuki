@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sijuki/widget/customclipper.dart';
 import 'package:sijuki/screen/homepage.dart';
+import 'package:sijuki/screen/homepage2.dart';
 import 'package:sijuki/auth_services.dart';
 import 'package:sijuki/bloc/tab_bloc.dart';
 import 'package:sijuki/constant.dart';
@@ -13,6 +14,7 @@ import 'package:sijuki/screen/settingpage.dart';
 import 'package:sijuki/screen/addpostingpage.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sijuki/model/posting.dart';
 
 class MainPage extends StatefulWidget {
   final FirebaseUser userLogin;
@@ -29,6 +31,7 @@ class _MainPageState extends State<MainPage> {
   User user = new User();
   UserDB userDB = new UserDB();
   var _user;
+  List<User> userList = [];
   // bool isLoginOrRegister = true;
 
   // final List<Widget> _children = [
@@ -38,6 +41,8 @@ class _MainPageState extends State<MainPage> {
   //   ProfilPage(userLogin: null)
   // ];
   final List<String> _strTitle = ['Beranda', 'Search', 'Notifikasi', 'Profil'];
+
+  PostingDB postingDB = new PostingDB();
 
   @override
   void initState() {
@@ -66,6 +71,20 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void _goAddPosting(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AddPostingPage(userLogin: user),
+        ));
+
+    if (result == true) {
+      setState(() {
+        // user = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //print(widget.userLogin.email);
@@ -92,7 +111,9 @@ class _MainPageState extends State<MainPage> {
                     onPressed: () {
                       Navigator.of(context).push(
                         new MaterialPageRoute(
-                            builder: (context) => new SettingPage(userLogin: user,)),
+                            builder: (context) => new SettingPage(
+                                  userLogin: user,
+                                )),
                       );
                     }),
               )
@@ -117,12 +138,18 @@ class _MainPageState extends State<MainPage> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              // print("step 1");
+              // // user = await userDB.selectByIDNew(2);
+              // userList = await postingDB.getDataTestUser();
+              // print(userList.toString());
+              // _goAddPosting(context);
               Navigator.of(context).push(
                 new MaterialPageRoute<String>(
                     builder: (context) => new AddPostingPage(
                           userLogin: user,
                         )),
               );
+
               //Navigator.of(context).pop();
               // AuthServices.signOut();
             },
@@ -218,14 +245,14 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-Widget _getTab(int idx, User user){
-  if (idx == 1){
-    return HomePage(userLogin: user);
-  }else if(idx == 2){
+Widget _getTab(int idx, User user) {
+  if (idx == 1) {
+    return HomePage2(userLogin: user);
+  } else if (idx == 2) {
     return TestPage();
-  }else if(idx == 3){
+  } else if (idx == 3) {
     return ProfilPage(userLogin: user);
-  }else{
+  } else {
     return HomePage(userLogin: user);
   }
 }
