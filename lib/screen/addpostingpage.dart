@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:sijuki/bloc/tab_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:file_picker/file_picker.dart';
 
 class AddPostingPage extends StatefulWidget {
   final User userLogin;
@@ -26,10 +27,13 @@ class _AddPostingPageState extends State<AddPostingPage> {
   TextEditingController controllerPosting = TextEditingController();
 
   File _image;
+  File _file;
   // List<File> _listImage;
   // String _imagePath = '';
   String _nameImage = '';
   String _urlImage = '';
+  String _urlFile = '';
+  String _fileName = '';
 
   int fidposting;
   Posting posting;
@@ -62,9 +66,13 @@ class _AddPostingPageState extends State<AddPostingPage> {
     posting.iduser = widget.userLogin.iduser;
     posting.content = controllerPosting.text;
     posting.urlGambar = _urlImage;
+    posting.urlFile = _urlFile;
+    posting.jmlLike = 0;
+    posting.jmlComment = 0;
     posting.tglPosting =
         formatDate(DateTime.now(), [dd, ' ', MM, ' ', yyyy, ' ', H, ':', nn]);
     posting.tglCreate = DateTime.now();
+    posting.tglUpdate = DateTime.now();
   }
 
   bool _checkValidate() {
@@ -108,19 +116,58 @@ class _AddPostingPageState extends State<AddPostingPage> {
     }
   }
 
+  // Future getImage() async {
+  //   File image;
+  //   image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  //   // var image = ImagePicker.platform.pickImage(source: ImageSource.gallery);
+
+  //   setState(() {
+  //     if (image != null) {
+  //       _image = image;
+  //       _nameImage = _path.basename(image.path);
+  //       print(_nameImage);
+  //       // _listImage.add(_image);
+  //       // _imagePath = image.path;
+  //       // _nameImage = splitPath(_imagePath);
+  //     }
+  //   });
+
+  //   if (_image != null) {
+  //     _uploadImage();
+  //   }
+  // }
+
+  Future getFilePdf() async {
+    final pickFile = await FilePicker.getFile(type: FileType.custom, allowedExtensions: ['pdf', 'doc'],);
+    setState(() {
+      if (pickFile != null) {
+        _file = pickFile;
+        _fileName = _path.basename(_file.path);
+        print(_fileName);
+        _uploadFile(pickFile.readAsBytesSync(), _fileName);
+      }
+    });
+  }
+
+  Future<String> _uploadFile(List<int> asset, String name) async {
+    StorageReference ref = FirebaseStorage.instance.ref().child(name);
+    StorageUploadTask uploadtTask = ref.putData(asset);
+
+    var urlDownl = await (await uploadtTask.onComplete).ref.getDownloadURL();
+    _urlFile = urlDownl.toString();
+
+    print('Url File : $_urlFile');
+    return _urlFile;
+  }
+
   Future getImage() async {
-    File image;
-    image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    // var image = ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    final pickImage = await ImagePicker().getImage(source: ImageSource.gallery);
 
     setState(() {
-      if (image != null) {
-        _image = image;
-        _nameImage = _path.basename(image.path);
+      if (pickImage != null) {
+        _image = File(pickImage.path);
+        _nameImage = _path.basename(_image.path);
         print(_nameImage);
-        // _listImage.add(_image);
-        // _imagePath = image.path;
-        // _nameImage = splitPath(_imagePath);
       }
     });
 
@@ -184,9 +231,8 @@ class _AddPostingPageState extends State<AddPostingPage> {
                             : NetworkImage(user.urlPhoto),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(user.username)
-                  ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(user.username)),
                   Spacer(),
                   IconButton(
                       icon: Icon(Icons.image),
@@ -195,9 +241,11 @@ class _AddPostingPageState extends State<AddPostingPage> {
                         getImage();
                       }),
                   IconButton(
-                      icon: Icon(Icons.upload_file),
+                      icon: Icon(Icons.attach_file),
                       iconSize: 20,
-                      onPressed: () {}),
+                      onPressed: () {
+                        getFilePdf();
+                      }),
 
                   // FlatButton.icon(
                   //     onPressed: () {},
@@ -214,21 +262,27 @@ class _AddPostingPageState extends State<AddPostingPage> {
             (_image == null)
                 ? Container()
                 : Container(
-                    color: Colors.grey[200],
+                    color: Colors.grey[100],
                     height: 80,
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: Align(
                         alignment: Alignment.topLeft,
                         child: Image.file(_image)),
                   ),
-            // : ListView.builder(
-            //   scrollDirection: Axis.horizontal,
-            //     itemCount: _listImage.length, itemBuilder: (_, index) {
-            //       return Container(
-            //         height: 80,
-            //       );
-            //     }),
-
+            SizedBox(
+              height: 2,
+            ),
+            (_file == null)
+                ? Container()
+                : ListTile(
+                    tileColor: Colors.blue[50],
+                    leading: Icon(
+                      Icons.description,
+                      size: 30,
+                      color:  Colors.black,
+                    ),
+                    title: Text(_fileName),
+                  ),
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               color: Colors.white,

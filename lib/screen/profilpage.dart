@@ -270,7 +270,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   height: 30,
-                                  padding: EdgeInsets.only(left: 15),
+                                  padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                                   color: Colors.white,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -278,13 +278,30 @@ class _ProfilPageState extends State<ProfilPage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Icon(Icons.comment, size: 20),
-                                      Text(
-                                        '10',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 12),
-                                      ),
+                                      (postingans.data["jmlComment"] > 0)
+                                          ? Text(
+                                              postingans.data["jmlComment"]
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            )
+                                          : Text(""),
                                       SizedBox(width: 20),
-                                      Icon(Icons.share, size: 20),
+                                      Icon(Icons.favorite_border, size: 20),
+                                      (postingans.data["jmlLike"] > 0)
+                                          ? Text(
+                                              postingans.data["jmlLike"]
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            )
+                                          : Text(""),
+                                      Spacer(),
+                                      (postingans.data["urlFile"] != "")
+                                          ? Icon(Icons.picture_as_pdf_outlined)
+                                          : Text("")
                                     ],
                                   ),
                                 ),

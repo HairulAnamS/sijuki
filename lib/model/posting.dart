@@ -7,16 +7,24 @@ class Posting {
   int iduser;
   String content;
   String urlGambar;
+  String urlFile;
+  int jmlLike;
+  int jmlComment;
   String tglPosting;
   DateTime tglCreate;
+  DateTime tglUpdate;
 
   Posting(
       {this.idposting,
       this.iduser,
       this.content,
       this.urlGambar,
+      this.urlFile,
+      this.jmlLike,
+      this.jmlComment,
       this.tglPosting,
-      this.tglCreate});
+      this.tglCreate,
+      this.tglUpdate});
 
   factory Posting.fromJson(Map<String, dynamic> map) {
     return Posting(
@@ -24,9 +32,14 @@ class Posting {
         iduser: map["iduser"],
         content: map["content"],
         urlGambar: map["urlGambar"],
+        urlFile: map["urlFile"],
+        jmlLike: map["jmlLike"],
+        jmlComment: map["jmlComment"],
         tglPosting: map["tglPosting"],
         tglCreate: DateTime.fromMillisecondsSinceEpoch(
-            map["tglCreate"].millisecondsSinceEpoch));
+            map["tglCreate"].millisecondsSinceEpoch),
+        tglUpdate: DateTime.fromMillisecondsSinceEpoch(
+            map["tglUpdate"].millisecondsSinceEpoch));
   }
 
   Map<String, dynamic> toJson() {
@@ -35,8 +48,12 @@ class Posting {
       "iduser": iduser,
       "content": content,
       "urlGambar": urlGambar,
+      "urlFile": urlFile,
+      "jmlLike": jmlLike,
+      "jmlComment": jmlComment,
       "tglPosting": tglPosting,
-      "tglCreate": tglCreate
+      "tglCreate": tglCreate,
+      "tglUpdate": tglUpdate
     };
   }
 
@@ -66,8 +83,12 @@ class PostingDB {
       'iduser': posting.iduser,
       'content': posting.content,
       'urlGambar': posting.urlGambar,
+      'urlFile': posting.urlFile,
+      'jmlLike': posting.jmlLike,
+      'jmlComment': posting.jmlComment,
       'tglPosting': posting.tglPosting,
-      'tglCreate': posting.tglCreate
+      'tglCreate': posting.tglCreate,
+      'tglUpdate': posting.tglUpdate
     });
   }
 
@@ -78,7 +99,7 @@ class PostingDB {
     return _myData.documents;
   }
 
-  Future <List<Posting>> getDataBiasa() async{
+  Future<List<Posting>> getDataBiasa() async {
     List<Posting> postingList = [];
     await dataCollection
         .orderBy('tglCreate', descending: true)
@@ -95,7 +116,7 @@ class PostingDB {
     return postingList;
   }
 
-  Future <List<User>> getDataUserPosting() async{
+  Future<List<User>> getDataUserPosting() async {
     List<User> userList = [];
     UserDB userDB = new UserDB();
     User user = new User();
@@ -155,37 +176,6 @@ class PostingDB {
     //print(userList.toString());
     return userList;
   }
-
-  // getData2() async {
-  //   QuerySnapshot _myData = await dataCollection
-  //       .orderBy('tglCreate', descending: true)
-  //       .getDocuments();
-  //   return _myData.documents;
-  // }
-
-  // getDataTest() async {
-  //   var _user;
-  //   UserDB userDB = new UserDB();
-  //   // User user = new User();
-  //   List<User> userList = [];
-
-  //   QuerySnapshot docs = await dataCollection
-  //       .orderBy('tglCreate', descending: true)
-  //       .getDocuments();
-
-  //   if (docs.documents.isNotEmpty) {
-  //     for (int i = 0; i < docs.documents.length; i++) {
-  //       await userDB
-  //           .selectByID(docs.documents[i].data["iduser"])
-  //           .then((QuerySnapshot docsUser) {
-  //         _user = docsUser.documents[i].data;
-  //         userList.add(User.fromJson(_user));
-  //       });
-  //     }
-  //   }
-
-  //   return userList;
-  // }
 
   Future<void> getDataPribadi(int iduser) async {
     QuerySnapshot _myData = await dataCollection
