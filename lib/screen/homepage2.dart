@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:sijuki/model/posting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sijuki/screen/testing.dart';
+import 'package:sijuki/screen/viewpdfpage.dart';
+import 'package:sijuki/screen/viewpostingpage.dart';
 
 class HomePage2 extends StatefulWidget {
   final User userLogin;
@@ -103,7 +106,19 @@ class _HomePage2State extends State<HomePage2> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.comment, size: 20),
+                            GestureDetector(
+                              child: Icon(Icons.comment, size: 20),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  new MaterialPageRoute(
+                                      builder: (context) => new ViewPostingPage(
+                                            posting: postingans,
+                                            userLogin: widget.userLogin,
+                                            userPosting: userPostingList[index],
+                                          )),
+                                );
+                              },
+                            ),
                             (postingans.jmlComment > 0)
                                 ? Text(
                                     postingans.jmlComment.toString(),
@@ -112,7 +127,15 @@ class _HomePage2State extends State<HomePage2> {
                                   )
                                 : Text(""),
                             SizedBox(width: 20),
-                            Icon(Icons.favorite_border, size: 20),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            new TestingPage()),
+                                  );
+                                },
+                                child: Icon(Icons.favorite_border, size: 20)),
                             (postingans.jmlLike > 0)
                                 ? Text(
                                     postingans.jmlLike.toString(),
@@ -122,7 +145,20 @@ class _HomePage2State extends State<HomePage2> {
                                 : Text(""),
                             Spacer(),
                             (postingans.urlFile != "")
-                                ? Icon(Icons.picture_as_pdf_outlined)
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        new MaterialPageRoute<String>(
+                                            builder: (context) =>
+                                                new ViewPdfPage(
+                                                  posting: postingans,
+                                                  namaUserPosting:
+                                                      userPostingList[index]
+                                                          .username,
+                                                )),
+                                      );
+                                    },
+                                    child: Icon(Icons.picture_as_pdf_outlined))
                                 : Text("")
                           ],
                         ),

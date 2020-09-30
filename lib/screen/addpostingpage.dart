@@ -213,6 +213,7 @@ class _AddPostingPageState extends State<AddPostingPage> {
                 TextStyle(color: Colors.red[700], fontWeight: FontWeight.bold),
           ),
         ),
+
         body: ListView(
           children: [
             Container(
