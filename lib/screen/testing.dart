@@ -23,7 +23,7 @@ class _TestingPageState extends State<TestingPage> {
           color: Colors.teal,
           child: TextField(
             controller: controllerComment,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.text,
             decoration: InputDecoration(
                 border: InputBorder.none, hintText: 'Komentar disini...'),
           ),

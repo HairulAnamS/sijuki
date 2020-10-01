@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:sijuki/model/posting.dart';
+import 'package:sijuki/model/comment.dart';
+import 'package:sijuki/widget/customalert.dart';
+import 'package:intl/intl.dart';
 
 class ViewPostingPage extends StatefulWidget {
   final User userLogin;
@@ -19,17 +22,102 @@ class ViewPostingPage extends StatefulWidget {
 
 class _ViewPostingPageState extends State<ViewPostingPage> {
   Posting posting;
+  PostingDB postingDB;
   User userPosting;
   User userLogin;
+
+  Comment comment;
+  CommentDB commentDB;
+  int fIdComment;
+
+  bool _result;
+  bool validateComment = true;
+  String _message = "";
+
+  List<Comment> commentList = [];
+  List<User> userCommentList = [];
+  bool isLoading = true;
 
   TextEditingController controllerComment = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    // posting = new Posting();
     posting = widget.posting;
     userPosting = widget.userPosting;
     userLogin = widget.userLogin;
+    comment = new Comment();
+    commentDB = new CommentDB();
+    postingDB = new PostingDB();
+    getCommentID();
+    ambilDataComment();
+  }
+
+  void getCommentID() async {
+    fIdComment = await commentDB.getMaxID();
+    // fIdComment = 1;
+  }
+
+  void ambilDataComment() async {
+    print("start ambil user comment");
+    userCommentList =
+        await commentDB.getUserCommentPostingan(posting.idposting);
+    print("start ambil data comment");
+    commentList = await commentDB.getCommentPostingan(posting.idposting);
+    print("step 3 home");
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void refreshPosting() async{
+    posting = await postingDB.selectByID(widget.posting.idposting);
+  }
+
+  _loadData() {
+    comment.idcomment = fIdComment;
+    comment.iduser = userLogin.iduser;
+    comment.idposting = posting.idposting;
+    comment.komentar = controllerComment.text;
+    comment.tglComment = DateTime.now();
+  }
+
+  bool _checkValidate() {
+    validateComment = true;
+    _result = true;
+
+    setState(() {
+      if (controllerComment.text.trim() == "") {
+        validateComment = false;
+        _result = false;
+      }
+      print('idComment validate: $fIdComment');
+    });
+    return _result;
+  }
+
+  Future<void> addComment(BuildContext context) async {
+    try {
+      if (_checkValidate()) {
+        _loadData();
+        commentDB.insert(comment);
+        postingDB.updateJmlComment(posting);
+      } else {
+        _message = "Comment kosong";
+        print(_message);
+        Alertku.showAlertCustom(context, _message);
+      }
+
+      getCommentID();
+      ambilDataComment();
+      refreshPosting();
+      setState(() {
+        
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -37,9 +125,9 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        // backgroundColor: Colors.white,
         // resizeToAvoidBottomPadding: true,
         // resizeToAvoidBottomInset: true,
-        // resizeToAvoidBottomPadding: true,
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -58,22 +146,9 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
           ),
         ),
 
-        // bottomSheet: Container(
-        //   padding: EdgeInsets.all(5),
-        //   //height: 50,
-        //   color: Colors.teal,
-        //   child: TextField(
-        //     controller: controllerComment,
-        //     keyboardType: TextInputType.number,
-        //     decoration: InputDecoration(
-        //         border: InputBorder.none, hintText: 'Komentar disini...'),
-        //   ),
-        // ),
-
         bottomSheet: Container(
           color: Colors.grey[300],
           padding: EdgeInsets.all(10),
-          // margin: EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -81,16 +156,23 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                 radius: 15,
                 backgroundColor: Colors.redAccent,
                 backgroundImage:
-                    (userPosting.urlPhoto == "" || userPosting.urlPhoto == null)
+                    (userLogin.urlPhoto == "" || userLogin.urlPhoto == null)
                         ? AssetImage("img/noprofile.png")
-                        : NetworkImage(userPosting.urlPhoto),
+                        : NetworkImage(userLogin.urlPhoto),
               ),
               Container(
                 // color: Colors.redAccent,
                 // height: 40,
                 width: 250,
                 child: TextField(
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    if (fIdComment == null) {
+                      getCommentID();
+                      print('idcomment change: $fIdComment');
+                    } else {
+                      print('idcomment change wes: $fIdComment');
+                    }
+                  },
                   controller: controllerComment,
                   maxLines: null,
                   keyboardType: TextInputType.text,
@@ -98,7 +180,12 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                       border: InputBorder.none, hintText: 'Komentar disini...'),
                 ),
               ),
-              IconButton(icon: Icon(Icons.send), onPressed: () {})
+              IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () async {
+                    addComment(context);
+                    controllerComment.text = '';
+                  })
             ],
           ),
         ),
@@ -119,7 +206,10 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                           : NetworkImage(userPosting.urlPhoto),
                     ),
                     title: (userPosting.username != null)
-                        ? Text(userPosting.username)
+                        ? Text(
+                            userPosting.username,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )
                         : Text(''),
                     subtitle: Text(
                       posting.tglPosting,
@@ -172,7 +262,86 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                   ),
                 ],
               ),
-            )
+            ),
+            Container(height: 1, color: Colors.grey[300]),
+            (isLoading)
+                ? Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: commentList.length,
+                    itemBuilder: (_, index) {
+                      final comments = commentList[index];
+                      final userComments = userCommentList[index];
+
+                      return Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(5),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white,
+                              backgroundImage: (userComments.urlPhoto == "" ||
+                                      userComments.urlPhoto == null)
+                                  ? AssetImage("img/noprofile.png")
+                                  : NetworkImage(userComments.urlPhoto),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      // border: Border.all(
+                                      //     width: 1.5, color: Colors.red),
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(15),
+                                          topRight: Radius.circular(15),
+                                          bottomRight: Radius.circular(15))),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(10.0),
+                                      //   child: Text(userComments.username + '     ' + DateFormat('[kk:mm]').format(comments.tglComment)),
+                                      // ),
+                                      Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                userComments.username,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                DateFormat('dd MMMM kk:mm').format(
+                                                    comments.tglComment),
+                                                style: TextStyle(fontSize: 11),
+                                              )
+                                            ],
+                                          )),
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(comments.komentar),
+                                      )
+                                    ],
+                                  )),
+                            )
+                          ],
+                        ),
+                      );
+                    })
           ],
         ),
       ),

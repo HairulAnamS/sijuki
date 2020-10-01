@@ -74,6 +74,7 @@ String objectToJson(Posting data) {
 }
 
 class PostingDB {
+  Posting posting = new Posting();
   static CollectionReference dataCollection =
       Firestore.instance.collection('posting');
 
@@ -90,6 +91,12 @@ class PostingDB {
       'tglCreate': posting.tglCreate,
       'tglUpdate': posting.tglUpdate
     });
+  }
+
+  Future<void> updateJmlComment(Posting posting) async {
+    await dataCollection.document(posting.idposting.toString()).setData({
+      'jmlComment': posting.jmlComment + 1,
+    }, merge: true);
   }
 
   Future<void> getData() async {
@@ -183,6 +190,17 @@ class PostingDB {
         .orderBy('tglCreate', descending: true)
         .getDocuments();
     return _myData.documents;
+  }
+
+  Future<Posting> selectByID(int id) async {
+    QuerySnapshot docs =
+        await dataCollection.where('idposting', isEqualTo: id).getDocuments();
+
+    if (docs.documents.length > 0) {
+      posting = Posting.fromJson(docs.documents[0].data);
+    }
+
+    return posting;
   }
 
   Future<int> getMaxID() async {

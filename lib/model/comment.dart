@@ -73,10 +73,11 @@ class CommentDB {
     return _myData.documents;
   }
 
-  Future<List<Comment>> getDataBiasa() async {
+  Future<List<Comment>> getCommentPostingan(int idposting) async {
     List<Comment> commentList = [];
     await dataCollection
-        .orderBy('tglCreate', descending: true)
+        .where('idposting', isEqualTo: idposting)
+        .orderBy('tglComment')
         .getDocuments()
         .then((docs) {
       if (docs.documents.length > 0) {
@@ -90,13 +91,14 @@ class CommentDB {
     return commentList;
   }
 
-  Future<List<User>> getDataUserComment() async {
+  Future<List<User>> getUserCommentPostingan(int idposting) async {
     List<User> userList = [];
     UserDB userDB = new UserDB();
     User user = new User();
 
     await dataCollection
-        .orderBy('tglCreate', descending: true)
+        .where('idposting', isEqualTo: idposting)
+        .orderBy('tglComment')
         .getDocuments()
         .then((docs) async {
       if (docs.documents.length > 0) {
