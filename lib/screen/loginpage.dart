@@ -57,6 +57,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    controlEmail.dispose();
+    controlPassword.dispose();
     super.dispose();
   }
 

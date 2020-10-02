@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sijuki/screen/notifpage.dart';
 import 'package:sijuki/widget/customclipper.dart';
 import 'package:sijuki/screen/homepage.dart';
 import 'package:sijuki/screen/homepage2.dart';
@@ -249,7 +250,7 @@ Widget _getTab(int idx, User user) {
   if (idx == 1) {
     return HomePage2(userLogin: user);
   } else if (idx == 2) {
-    return TestPage();
+    return NotifPage(userLogin: user);
   } else if (idx == 3) {
     return ProfilPage(userLogin: user);
   } else {

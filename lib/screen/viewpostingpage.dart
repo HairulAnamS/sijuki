@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sijuki/constant.dart';
+import 'package:sijuki/model/notif.dart';
 import 'package:sijuki/model/user.dart';
 import 'package:sijuki/model/posting.dart';
 import 'package:sijuki/model/comment.dart';
@@ -25,10 +27,13 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
   PostingDB postingDB;
   User userPosting;
   User userLogin;
+  Notif notif;
+  NotifDB notifDB;
 
   Comment comment;
   CommentDB commentDB;
   int fIdComment;
+  int fIdNotif;
 
   bool _result;
   bool validateComment = true;
@@ -43,19 +48,29 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
   @override
   void initState() {
     super.initState();
-    // posting = new Posting();
     posting = widget.posting;
     userPosting = widget.userPosting;
     userLogin = widget.userLogin;
+
     comment = new Comment();
     commentDB = new CommentDB();
     postingDB = new PostingDB();
-    getCommentID();
+    notif = new Notif();
+    notifDB = new NotifDB();
+
+    getID();
     ambilDataComment();
   }
 
-  void getCommentID() async {
+  @override
+  void dispose() {
+    controllerComment.dispose();
+    super.dispose();
+  }
+
+  void getID() async {
     fIdComment = await commentDB.getMaxID();
+    fIdNotif = await notifDB.getMaxID();
     // fIdComment = 1;
   }
 
@@ -81,6 +96,15 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
     comment.idposting = posting.idposting;
     comment.komentar = controllerComment.text;
     comment.tglComment = DateTime.now();
+
+    notif.idnotif = fIdNotif;
+    notif.idposting = posting.idposting;
+    notif.iduserPosting = userPosting.iduser;
+    notif.iduserNotif = userLogin.iduser;
+    notif.isRead = false;
+    notif.jnsNotif = notif_comment;
+    notif.pesanNotif = 'mengomentari postinganmu';
+    notif.tglNotif = DateTime.now();
   }
 
   bool _checkValidate() {
@@ -92,7 +116,7 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
         validateComment = false;
         _result = false;
       }
-      print('idComment validate: $fIdComment');
+      // print('idComment validate: $fIdComment');
     });
     return _result;
   }
@@ -103,13 +127,14 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
         _loadData();
         commentDB.insert(comment);
         postingDB.updateJmlComment(posting);
+        notifDB.insert(notif);
       } else {
         _message = "Comment kosong";
         print(_message);
         Alertku.showAlertCustom(context, _message);
       }
 
-      getCommentID();
+      getID();
       ambilDataComment();
       refreshPosting();
       setState(() {
@@ -166,11 +191,11 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                 width: 250,
                 child: TextField(
                   onChanged: (value) {
-                    if (fIdComment == null) {
-                      getCommentID();
-                      print('idcomment change: $fIdComment');
+                    if (fIdComment == null || fIdNotif == null) {
+                      getID();
+                      print('idcomment: $fIdComment, idNotif: $fIdNotif');
                     } else {
-                      print('idcomment change wes: $fIdComment');
+                      print('idcomment wes: $fIdComment, idNotif: $fIdNotif');
                     }
                   },
                   controller: controllerComment,
@@ -325,7 +350,7 @@ class _ViewPostingPageState extends State<ViewPostingPage> {
                                               ),
                                               Spacer(),
                                               Text(
-                                                DateFormat('dd MMMM kk:mm').format(
+                                                DateFormat('dd MMM kk:mm').format(
                                                     comments.tglComment),
                                                 style: TextStyle(fontSize: 11),
                                               )

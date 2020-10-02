@@ -57,6 +57,12 @@ class _AddPostingPageState extends State<AddPostingPage> {
     print('iduser init: ' + user.username);
   }
 
+  @override
+  void dispose() {
+    controllerPosting.dispose();
+    super.dispose();
+  }
+
   void getPostingID() async {
     fidposting = await postingDB.getMaxID();
   }

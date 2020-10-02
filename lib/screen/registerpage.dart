@@ -48,6 +48,16 @@ class _RegisterPageState extends State<RegisterPage> {
     print('iduser init: $fiduser');
   }
 
+  @override
+  void dispose(){
+    controlPassword.dispose();
+    controlPasswordConfirm.dispose();
+    controlUsername.dispose();
+    controlEmail.dispose();
+    controlNohp.dispose();
+    super.dispose();
+  }
+
   void getUserID() async {
     fiduser = await userDB.getMaxID();
   }

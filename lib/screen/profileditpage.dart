@@ -61,6 +61,15 @@ class _ProfilEditPageState extends State<ProfilEditPage> {
     // _getUser();
   }
 
+  @override
+  void dispose(){
+    controlUsername.dispose();
+    controlNohp.dispose();
+    controlPekerjaan.dispose();
+    controlAlamat.dispose();
+    super.dispose();
+  }
+
   // void _getUser() {
   //   userDB.selectByID(widget.userLogin.iduser).then((QuerySnapshot docs) {
   //     if (docs.documents.isNotEmpty) {
